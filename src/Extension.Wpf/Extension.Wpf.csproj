@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Authors>Falk von Ohlen</Authors>
+    <Version>0.0.7</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>Enhances Wpf by a few user controls and MVVM support</Description>
+    <RepositoryType>C#</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Error.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Error.ico" />
+  </ItemGroup>
+
+</Project>
