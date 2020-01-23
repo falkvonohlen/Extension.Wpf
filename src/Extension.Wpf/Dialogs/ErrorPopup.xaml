@@ -6,6 +6,7 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Extension.Wpf.Dialogs"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
         Icon="../Resources/Error.ico"
         Title="{Binding Name}" Height="200" Width="400">
     <Grid>

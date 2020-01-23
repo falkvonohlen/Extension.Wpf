@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 
 namespace Extension.Wpf.Dialogs
 {
@@ -15,6 +16,7 @@ namespace Extension.Wpf.Dialogs
             ViewModelBase.RunInUiThread(() => 
             {
                 var dialog = new ErrorPopup(name, ex);
+                dialog.Owner = Application.Current.MainWindow;
                 dialog.ShowDialog();
             });
         }

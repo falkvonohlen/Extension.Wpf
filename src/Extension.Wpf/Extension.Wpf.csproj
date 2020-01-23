@@ -8,6 +8,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>Enhances Wpf by a few user controls and MVVM support</Description>
     <RepositoryType>C#</RepositoryType>
+    <RepositoryUrl>https://github.com/Jugalio/Extension.Wpf</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
