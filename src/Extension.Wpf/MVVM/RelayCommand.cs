@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows.Input;
 
 namespace Extension.Wpf.MVVM
@@ -11,6 +12,7 @@ namespace Extension.Wpf.MVVM
     /// </summary>
     public class RelayCommand<T> : ICommand
     {
+        private SynchronizationContext _synchronizationContext;
         readonly Action<T> _execute = null;
         readonly Predicate<T> _canExecute = null;
 
@@ -25,6 +27,7 @@ namespace Extension.Wpf.MVVM
                 throw new ArgumentNullException(nameof(execute));
 
             _execute = execute;
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace Extension.Wpf.MVVM
                 throw new ArgumentNullException(nameof(canExecute));
 
             _canExecute = canExecute;
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
         ///<summary>
@@ -71,7 +75,7 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            _synchronizationContext.Post(o => CanExecuteChanged?.Invoke(this, EventArgs.Empty), null);
         }
     }
 
@@ -81,6 +85,7 @@ namespace Extension.Wpf.MVVM
     /// </summary>
     public class RelayCommand : ICommand
     {
+        private SynchronizationContext _synchronizationContext;
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
 
@@ -94,6 +99,7 @@ namespace Extension.Wpf.MVVM
                 throw new ArgumentNullException(nameof(execute));
 
             _execute = execute;
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
 
@@ -109,6 +115,7 @@ namespace Extension.Wpf.MVVM
                 throw new ArgumentNullException(nameof(canExecute));
 
             _canExecute = canExecute;
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
         ///<summary>
@@ -143,7 +150,7 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            _synchronizationContext.Post(o => CanExecuteChanged?.Invoke(this, EventArgs.Empty), null);
         }
     }
 }
