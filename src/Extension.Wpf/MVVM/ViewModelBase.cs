@@ -17,33 +17,37 @@ namespace Extension.Wpf.MVVM
     /// properties used in the gui by implementing the INotifyPropertyChanged interface
     /// and provide a RaisePropertyChanged method that gets the property name via reflection
     /// </summary>
-    public class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        private static SynchronizationContext _context;
+        /// <summary>
+        /// The synchronisation context for this viewmodel
+        /// </summary>
+        public static SynchronizationContext SynchronizationContext;
+
+        /// <summary>
+        /// If set to true and the logger and dioalog service are defined
+        /// exceptions are catched 
+        /// </summary>
+        public bool CatchExceptions = true;
 
         /// <summary>
         /// The logger for this class
-        /// In order to use it the Microsoft logging extension has to be used as well
         /// </summary>
-        private readonly ILogger _log;
+        public ILogger Logger { get; protected set; }
 
         /// <summary>
-        /// A dialog service implemetation in order to
-        /// provide a popup on catched exceptions
+        /// The dialogservice for this class
         /// </summary>
-        protected IDialogService _dialogs;
+        public IDialogService DialogService { get; protected set; }
 
         /// <summary>
         /// The first time a viewmodel base is called the synchronization context is set
         /// </summary>
-        public ViewModelBase(ILogger logger, IDialogService dialogs)
+        public ViewModelBase()
         {
-            _log = logger;
-            _dialogs = dialogs;
-
-            if (_context == null)
+            if (SynchronizationContext == null)
             {
-                _context = SynchronizationContext.Current;
+                SynchronizationContext = SynchronizationContext.Current;
             }
         }
 
@@ -56,9 +60,18 @@ namespace Extension.Wpf.MVVM
         /// Raises the PropertyChanged event with the name of the property this function is called from
         /// </summary>
         /// <param name="name"></param>
+        protected void RaisePropertyChangedAsync([CallerMemberName] string name = null)
+        {
+            UICallbackAsync(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
+        }
+
+        /// <summary>
+        /// Raises the PropertyChanged event with the name of the property this function is called from
+        /// </summary>
+        /// <param name="name"></param>
         protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            UICallback(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
         }
 
         /// <summary>
@@ -67,7 +80,16 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         protected void RaisePropertyChangedForAll()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
+            UICallback(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty)));
+        }
+
+        /// <summary>
+        /// Raises the property changed event for all properties within this viewmodel
+        /// and therefore triggers a rerender for all binding
+        /// </summary>
+        protected void RaisePropertyChangedForAllAsync()
+        {
+            UICallbackAsync(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty)));
         }
 
         /// <summary>
@@ -80,11 +102,10 @@ namespace Extension.Wpf.MVVM
             {
                 action.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (CatchExceptions)
             {
                 var msg = $"Error during {action.Method.Name}";
-                _log.LogError(ex, msg);
-                _dialogs.ExceptionPopup(msg, ex);
+                HandleException(ex, msg);
             }
         }
 
@@ -100,11 +121,10 @@ namespace Extension.Wpf.MVVM
             {
                 action.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (CatchExceptions)
             {
                 var msg = $"Error during {action.Method.Name}";
-                _log.LogError(ex, msg);
-                _dialogs.ExceptionPopup(msg, ex);
+                HandleException(ex, msg);
             }
             finally
             {
@@ -130,11 +150,10 @@ namespace Extension.Wpf.MVVM
                 }
                 action.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (CatchExceptions)
             {
                 var msg = $"Error during {action.Method.Name}";
-                _log.LogError(ex, msg);
-                _dialogs.ExceptionPopup(msg, ex);
+                HandleException(ex, msg);
             }
             finally
             {
@@ -161,11 +180,10 @@ namespace Extension.Wpf.MVVM
                 }
                 action.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (CatchExceptions)
             {
                 var msg = $"Error during {action.Method.Name}";
-                _log.LogError(ex, msg);
-                _dialogs.ExceptionPopup(msg, ex);
+                HandleException(ex, msg);
             }
             finally
             {
@@ -234,10 +252,10 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         protected void SetLoading()
         {
-            RunInUiThreadAsync(() => 
+            UICallbackAsync(() =>
             {
                 Mouse.OverrideCursor = Cursors.Wait;
-                if (Application.Current != null)
+                if (Application.Current?.MainWindow != null)
                 {
                     Application.Current.MainWindow.PreviewMouseDown += MainWindow_PreviewMouseDown;
                 }
@@ -249,10 +267,10 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         protected void ResetLoading()
         {
-            RunInUiThreadAsync(() =>
+            UICallbackAsync(() =>
             {
                 Mouse.OverrideCursor = null;
-                if (Application.Current != null)
+                if (Application.Current?.MainWindow != null)
                 {
                     Application.Current.MainWindow.PreviewMouseDown -= MainWindow_PreviewMouseDown;
                 }
@@ -273,18 +291,49 @@ namespace Extension.Wpf.MVVM
         /// Runs a given action in the ui thread
         /// </summary>
         /// <param name="action"></param>
-        public static void RunInUiThread(Action action)
+        public static void UICallback(Action action)
         {
-            _context.Send(new SendOrPostCallback((o) => action.Invoke()), null);
+            if (SynchronizationContext != null)
+            {
+                SynchronizationContext.Send(new SendOrPostCallback((o) => action.Invoke()), null);
+            }
+            else
+            {
+                throw new InvalidOperationException("The SynchronizationContext of the viewmodel bas has not been set");
+            }
         }
 
         /// <summary>
         /// Runs a given action in the ui thread
         /// </summary>
         /// <param name="action"></param>
-        public static void RunInUiThreadAsync(Action action)
+        public static void UICallbackAsync(Action action)
         {
-            _context.Post(new SendOrPostCallback((o) => action.Invoke()), null);
+            if (SynchronizationContext != null)
+            {
+                SynchronizationContext.Post(new SendOrPostCallback((o) => action.Invoke()), null);
+            }
+            else
+            {
+                throw new InvalidOperationException("The SynchronizationContext of the viewmodel bas has not been set");
+            }
+        }
+
+        /// <summary>
+        /// Handles excpetions
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <param name="msg"></param>
+        private void HandleException(Exception ex, string msg)
+        {
+            if (Logger != null)
+            {
+                Logger.LogError(ex, msg);
+            }
+            if (DialogService != null)
+            {
+                DialogService.ExceptionPopup(msg, ex);
+            }
         }
     }
 }

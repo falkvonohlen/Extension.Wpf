@@ -13,7 +13,7 @@ namespace Extension.Wpf.Dialogs
     {
         public void ExceptionPopup(string name, Exception ex)
         {
-            ViewModelBase.RunInUiThread(() => 
+            ViewModelBase.UICallback(() => 
             {
                 var dialog = new ErrorPopup(name, ex);
                 dialog.Owner = Application.Current.MainWindow;
