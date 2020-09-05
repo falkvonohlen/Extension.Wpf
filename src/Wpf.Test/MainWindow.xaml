@@ -4,23 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf.Test"
+        xmlns:controls="clr-namespace:Extension.Wpf.UserControls;assembly=Extension.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="450"
+        Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="0" Grid.Row="0" Content="Error" Click="Button_Click" Margin="10"/>
+        <Button Grid.Column="0"
+                Grid.Row="0"
+                Content="Error"
+                Click="Button_Click"
+                Margin="10" />
+        <controls:FileControl FilePath="{Binding FilePath}"
+                              Grid.Row="1"
+                              Grid.ColumnSpan="2"
+                              Margin="10"
+                              DefaultExt=".json"
+                              Filter="*.json(Json)|*.json|*.*(All Files)|*.*"
+                              ButtonMargin="15,0"
+                              TextBoxMargin="0,2"
+                              IsReadOnly="False" />
+        <controls:DirectoryControl DirectoryPath="{Binding FilePath}"
+                              Grid.Row="2"
+                              Grid.ColumnSpan="2"
+                              Margin="10"
+                              ButtonMargin="15,0"
+                              TextBoxMargin="0,2"
+                              IsReadOnly="False" />
     </Grid>
 </Window>

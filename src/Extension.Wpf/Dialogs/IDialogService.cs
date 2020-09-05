@@ -16,5 +16,6 @@ namespace Extension.Wpf.Dialogs
         /// <param name="ex"></param>
         void ExceptionPopup(string name, Exception ex);
 
+
     }
 }
