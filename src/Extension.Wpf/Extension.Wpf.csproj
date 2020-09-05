@@ -11,7 +11,7 @@
     <RepositoryType>C#</RepositoryType>
     <RepositoryUrl>https://github.com/Jugalio/Extension.Wpf</RepositoryUrl>
     <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <FileVersion>1.1.1.0</FileVersion>
     <PackageReleaseNotes>Main Properties bind twoway by default</PackageReleaseNotes>
   </PropertyGroup>
 
