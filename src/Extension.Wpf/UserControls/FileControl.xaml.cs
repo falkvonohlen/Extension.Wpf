@@ -26,7 +26,7 @@ namespace Extension.Wpf.UserControls
         /// </summary>
         public static readonly DependencyProperty FilePathProperty = DependencyProperty.Register(
             "FilePath", typeof(string), typeof(FileControl),
-            new FrameworkPropertyMetadata(string.Empty));
+            new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The property used in this control
@@ -173,7 +173,7 @@ namespace Extension.Wpf.UserControls
             InitializeComponent();
 
             //The bindings need to be mapped on the code behind
-            (Content as FrameworkElement).DataContext = this;
+            (this.Content as FrameworkElement).DataContext = this;
         }
 
         /// <summary>
