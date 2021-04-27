@@ -20,12 +20,17 @@ namespace Extension.Wpf.MVVM
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         /// <summary>
+        /// A static counter used if multiple function set and/or reset loading
+        /// </summary>
+        private static uint _loadingCounter;
+
+        /// <summary>
         /// The synchronisation context for this viewmodel
         /// </summary>
         public static SynchronizationContext SynchronizationContext;
 
         /// <summary>
-        /// If set to true and the logger and dioalog service are defined
+        /// If set to true and the logger and dialog service are defined
         /// exceptions are catched 
         /// </summary>
         public bool CatchExceptions = true;
@@ -59,7 +64,7 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Raises the PropertyChanged event with the name of the property this function is called from
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the property which has been updated</param>
         protected void RaisePropertyChangedAsync([CallerMemberName] string name = null)
         {
             UICallbackAsync(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
@@ -68,7 +73,7 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Raises the PropertyChanged event with the name of the property this function is called from
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the property which has been updated</param>
         protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
             UICallback(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
@@ -114,7 +119,6 @@ namespace Extension.Wpf.MVVM
         /// </summary>
         /// <param name="action">The executed action</param>
         /// <param name="finalAction">Runs always even if an exception has been catched</param>
-        /// 
         protected void UserAction(Action action, Action finalAction)
         {
             try
@@ -138,8 +142,8 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling and sets the application in a loading state in the mean time
         /// </summary>
-        /// <param name="action"></param>
-        /// <param name="loading"></param>
+        /// <param name="action">The executed action</param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
         protected void UserAction(Action action, bool loading)
         {
             try
@@ -167,9 +171,9 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling and sets the application in a loading state in the mean time
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
         /// <param name="finalAction">Runs always even if an exception has been catched</param>
-        /// <param name="loading"></param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
         protected void UserAction(Action action, Action finalAction, bool loading)
         {
             try
@@ -201,7 +205,7 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
         protected Task UserActionAsync(Action action)
         {
             return Task.Run(() =>
@@ -213,7 +217,8 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
+        /// <param name="finalAction">Runs always even if an exception has been catched</param>
         protected Task UserActionAsync(Action action, Action finalAction)
         {
             return Task.Run(() =>
@@ -225,7 +230,8 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
         protected Task UserActionAsync(Action action, bool loading)
         {
             return Task.Run(() =>
@@ -237,7 +243,9 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Run an user action with exception handling
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
+        /// <param name="finalAction">Runs always even if an exception has been catched</param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
         protected Task UserActionAsync(Action action, Action finalAction, bool loading)
         {
             return Task.Run(() =>
@@ -250,39 +258,47 @@ namespace Extension.Wpf.MVVM
         /// Set the application in a loading state
         /// Replacing the cursor and catches all mouse interactions
         /// </summary>
-        protected void SetLoading()
+        protected static void SetLoading()
         {
-            UICallbackAsync(() =>
+            _loadingCounter++;
+            if (_loadingCounter == 1)
             {
-                Mouse.OverrideCursor = Cursors.Wait;
-                if (Application.Current?.MainWindow != null)
+                UICallbackAsync(() =>
                 {
-                    Application.Current.MainWindow.PreviewMouseDown += MainWindow_PreviewMouseDown;
-                }
-            });
+                    Mouse.OverrideCursor = Cursors.Wait;
+                    if (Application.Current?.MainWindow != null)
+                    {
+                        Application.Current.MainWindow.PreviewMouseDown += MainWindow_PreviewMouseDown;
+                    }
+                });
+            }
         }
 
         /// <summary>
         /// Resets the application back to its normal mode
         /// </summary>
-        protected void ResetLoading()
+        protected static void ResetLoading()
         {
-            UICallbackAsync(() =>
+            _loadingCounter--;
+            if (_loadingCounter == 0)
             {
-                Mouse.OverrideCursor = null;
-                if (Application.Current?.MainWindow != null)
+                UICallbackAsync(() =>
                 {
-                    Application.Current.MainWindow.PreviewMouseDown -= MainWindow_PreviewMouseDown;
-                }
-            });
+                    Mouse.OverrideCursor = null;
+                    if (Application.Current?.MainWindow != null)
+                    {
+                        Application.Current.MainWindow.PreviewMouseDown -= MainWindow_PreviewMouseDown;
+                    }
+                });
+            }
         }
 
         /// <summary>
-        /// The to handle. This way the mouse action will be ignored
+        /// Callback to handle mouse clicks when the application is in the loading state
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        /// <param name="sender">The object which fires the event</param>
+        /// <param name="e">The event args for a mouse click</param>
+        private static void MainWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
         }
@@ -290,12 +306,12 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Runs a given action in the ui thread
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
         public static void UICallback(Action action)
         {
             if (SynchronizationContext != null)
             {
-                SynchronizationContext.Send(new SendOrPostCallback((o) => action.Invoke()), null);
+                SynchronizationContext.Send(o => action.Invoke(), null);
             }
             else
             {
@@ -306,12 +322,12 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Runs a given action in the ui thread
         /// </summary>
-        /// <param name="action"></param>
+        /// <param name="action">The executed action</param>
         public static void UICallbackAsync(Action action)
         {
             if (SynchronizationContext != null)
             {
-                SynchronizationContext.Post(new SendOrPostCallback((o) => action.Invoke()), null);
+                SynchronizationContext.Post(o => action.Invoke(), null);
             }
             else
             {
@@ -322,8 +338,8 @@ namespace Extension.Wpf.MVVM
         /// <summary>
         /// Handles excpetions
         /// </summary>
-        /// <param name="ex"></param>
-        /// <param name="msg"></param>
+        /// <param name="ex">The catched exception which is reported to the user and logged</param>
+        /// <param name="msg">The message which is added to explain where the exception occured</param>
         private void HandleException(Exception ex, string msg)
         {
             if (Logger != null)

@@ -38,7 +38,7 @@
                               ButtonMargin="15,0"
                               TextBoxMargin="0,2"
                               IsReadOnly="False" />
-        <controls:DirectoryControl DirectoryPath="{Binding FilePath}"
+        <controls:DirectoryControl DirectoryPath="{Binding DirectoryPath}"
                               Grid.Row="2"
                               Grid.ColumnSpan="2"
                               Margin="10"
