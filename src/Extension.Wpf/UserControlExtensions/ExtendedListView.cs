@@ -57,6 +57,5 @@ namespace Extension.Wpf.UserControlExtensions
                 ScrollIntoView(lastItemAdded);
             }
         }
-
     }
 }

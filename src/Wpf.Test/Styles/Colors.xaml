@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+
+    <Color x:Key="ForegroundA_Color">#eee</Color>
+    <Color x:Key="ForegroundB_Color">#ccc</Color>
+    <Color x:Key="ForegroundC_Color">#111</Color>
+
+
+    <Color x:Key="BackgroundA_Color">#333</Color>
+    <Color x:Key="BackgroundB_Color">#444</Color>
+    <Color x:Key="BackgroundC_Color">#eee</Color>
+    <Color x:Key="BackgroundD_Color">#666</Color>
+    <Color x:Key="BackgroundE_Color">#111</Color>
+
+    <Color x:Key="HighlightB_Color">Steelblue</Color>
+
+    <SolidColorBrush x:Key="BackgroundA"
+                     Color="{DynamicResource BackgroundA_Color}" />
+    <SolidColorBrush x:Key="BackgroundB"
+                     Color="{DynamicResource BackgroundB_Color}" />
+    <SolidColorBrush x:Key="BackgroundC"
+                     Color="{DynamicResource BackgroundC_Color}" />
+    <SolidColorBrush x:Key="BackgroundD"
+                     Color="{DynamicResource BackgroundD_Color}" />
+    <SolidColorBrush x:Key="BackgroundE"
+                     Color="{DynamicResource BackgroundE_Color}" />
+
+    <SolidColorBrush x:Key="ForegroundA"
+                     Color="{DynamicResource ForegroundA_Color}" />
+    <SolidColorBrush x:Key="ForegroundB"
+                     Color="{DynamicResource ForegroundB_Color}" />
+    <SolidColorBrush x:Key="ForegroundC"
+                     Color="{DynamicResource ForegroundC_Color}" />
+
+    <SolidColorBrush x:Key="HighlightA"
+                     Color="LightSteelBlue"
+                     Opacity="0.9" />
+    <SolidColorBrush x:Key="HighlightB"
+                     Color="{DynamicResource HighlightB_Color}"
+                     Opacity="1.0" />
+    <SolidColorBrush x:Key="HighlightC"
+                     Color="LightSteelBlue"
+                     Opacity="1.0" />
+    <SolidColorBrush x:Key="HighlightB_T"
+                     Color="SteelBlue"
+                     Opacity="0.5" />
+    <SolidColorBrush x:Key="HighlightC_T"
+                     Color="SteelBlue"
+                     Opacity="0.8" />
+    <SolidColorBrush x:Key="HighlightB_FakeT"
+                     Color="#3C5A73"
+                     Opacity="1" />
+
+    <SolidColorBrush x:Key="BrushInstalled"
+                     Color="SteelBlue"
+                     Opacity="1.0" />
+    <SolidColorBrush x:Key="BrushNotInstalled"
+                     Color="Gray"
+                     Opacity="1.0" />
+
+</ResourceDictionary>

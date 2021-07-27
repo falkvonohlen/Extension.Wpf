@@ -236,8 +236,8 @@ namespace Extension.Wpf.UserControls
             {
                 var psi = new ProcessStartInfo("explorer.exe")
                 {
-                    Arguments = System.IO.Path.GetDirectoryName(FilePath),
-                    UseShellExecute = true
+                    Arguments = $"/separate /select, {System.IO.Path.GetDirectoryName(FilePath)}",
+                    UseShellExecute = false,
                 };
                 Process.Start(psi);
             }

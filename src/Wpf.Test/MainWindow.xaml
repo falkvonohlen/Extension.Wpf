@@ -5,18 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf.Test"
         xmlns:controls="clr-namespace:Extension.Wpf.UserControls;assembly=Extension.Wpf"
+        xmlns:logControls="clr-namespace:Extension.Wpf.UserControls.Logging;assembly=Extension.Wpf"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
-        Width="800">
+        Width="800"
+        Background="{DynamicResource BackgroundA}"
+        Foreground="{DynamicResource ForegroundA}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,9 +26,16 @@
 
         <Button Grid.Column="0"
                 Grid.Row="0"
+                Content="Rnd Log"
+                Click="Button_Click_1"
+                Margin="10" />
+
+        <Button Grid.Column="1"
+                Grid.Row="0"
                 Content="Error"
                 Click="Button_Click"
                 Margin="10" />
+        
         <controls:FileControl FilePath="{Binding FilePath}"
                               Grid.Row="1"
                               Grid.ColumnSpan="2"
@@ -45,5 +52,19 @@
                               ButtonMargin="15,0"
                               TextBoxMargin="0,2"
                               IsReadOnly="False" />
+
+        <logControls:LogView Id="Log1"
+                             AutoScroll="true"
+                             Grid.Row="3"
+                             Grid.Column="0"
+                             Background="{DynamicResource BackgroundA}"
+                             Foreground="{DynamicResource ForegroundA}" />
+
+        <logControls:LogView Id="Log2"
+                             AutoScroll="false"
+                             Grid.Row="3"
+                             Grid.Column="1"
+                             Background="{DynamicResource BackgroundA}"
+                             Foreground="{DynamicResource ForegroundA}" />
     </Grid>
 </Window>

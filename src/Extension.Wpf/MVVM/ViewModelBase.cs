@@ -31,7 +31,7 @@ namespace Extension.Wpf.MVVM
 
         /// <summary>
         /// If set to true and the logger and dialog service are defined
-        /// exceptions are catched 
+        /// exceptions are caught 
         /// </summary>
         public bool CatchExceptions = true;
 

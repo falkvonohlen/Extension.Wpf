@@ -7,6 +7,11 @@
              mc:Ignorable="d"
              d:DesignHeight="50"
              d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Extension.Wpf;component/Resources/Icons.xaml" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -20,9 +25,17 @@
             <TextBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Open"
-                              Click="OpenFile_Click" />
-                    <MenuItem Header="Open in Explorer"
-                              Click="OpenExplorer_Click" />
+                              Click="OpenFile_Click">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource OpenImage}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Open in File Explorer"
+                              Click="OpenExplorer_Click">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource OpenFolderImage}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </TextBox.ContextMenu>
         </TextBox>

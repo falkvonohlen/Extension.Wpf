@@ -1,37 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0; net472</TargetFrameworks>
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <Authors>Falk von Ohlen</Authors>
-    <Version>1.1.1</Version>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Description>Enhances Wpf by a few user controls and MVVM support</Description>
-    <RepositoryType>C#</RepositoryType>
-    <RepositoryUrl>https://github.com/Jugalio/Extension.Wpf</RepositoryUrl>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
-    <PackageReleaseNotes>Main Properties bind twoway by default</PackageReleaseNotes>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.0; net472</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Authors>Falk von Ohlen</Authors>
+		<Version>1.3.1</Version>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<Description>Enhances Wpf by a few user controls and MVVM support</Description>
+		<RepositoryType>C#</RepositoryType>
+		<RepositoryUrl>https://github.com/Jugalio/Extension.Wpf</RepositoryUrl>
+		<AssemblyVersion>1.3.1.0</AssemblyVersion>
+		<FileVersion>1.3.1.0</FileVersion>
+		<PackageReleaseNotes>Fixed styling bugs on the logging control and a bug on the proxy binding</PackageReleaseNotes>
+		<LangVersion>8.0</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\Error.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Resources\Error.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.25.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\Error.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Resources\Error.ico" />
+	</ItemGroup>
 
 </Project>
