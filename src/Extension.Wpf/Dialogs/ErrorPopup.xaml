@@ -25,7 +25,7 @@
                    TextWrapping="WrapWithOverflow"
                    Margin="10"
                    HorizontalAlignment="Left" />
-        <GroupBox Header="Stack Trace"
+        <GroupBox Header="Stacktrace"
                   Grid.Row="1">
             <TextBlock  x:Name="Trace"
                         TextWrapping="WrapWithOverflow"

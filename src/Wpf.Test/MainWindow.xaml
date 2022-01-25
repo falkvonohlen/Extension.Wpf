@@ -9,15 +9,16 @@
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
-        Width="800"
         Background="{DynamicResource BackgroundA}"
-        Foreground="{DynamicResource ForegroundA}">
+        Foreground="{DynamicResource ForegroundA}"
+        Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="60" />
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -35,7 +36,7 @@
                 Content="Error"
                 Click="Button_Click"
                 Margin="10" />
-        
+
         <controls:FileControl FilePath="{Binding FilePath}"
                               Grid.Row="1"
                               Grid.ColumnSpan="2"
@@ -46,25 +47,31 @@
                               TextBoxMargin="0,2"
                               IsReadOnly="False" />
         <controls:DirectoryControl DirectoryPath="{Binding DirectoryPath}"
-                              Grid.Row="2"
-                              Grid.ColumnSpan="2"
-                              Margin="10"
-                              ButtonMargin="15,0"
-                              TextBoxMargin="0,2"
-                              IsReadOnly="False" />
+                                   Grid.Row="2"
+                                   Grid.ColumnSpan="2"
+                                   Margin="10"
+                                   ButtonMargin="15,0"
+                                   TextBoxMargin="0,2"
+                                   IsReadOnly="False" />
 
         <logControls:LogView Id="Log1"
                              AutoScroll="true"
                              Grid.Row="3"
-                             Grid.Column="0"
                              Background="{DynamicResource BackgroundA}"
-                             Foreground="{DynamicResource ForegroundA}" />
+                             Foreground="{DynamicResource ForegroundA}"
+                             Grid.Column="0" />
 
         <logControls:LogView Id="Log2"
                              AutoScroll="false"
                              Grid.Row="3"
-                             Grid.Column="1"
                              Background="{DynamicResource BackgroundA}"
-                             Foreground="{DynamicResource ForegroundA}" />
+                             Foreground="{DynamicResource ForegroundA}"
+                             Grid.Column="1" />
+
+        <Button Grid.Column="0"
+                Grid.Row="4"
+                Content="Test"
+                Command="{Binding TestRelay}"
+                Margin="10" />
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -55,13 +56,21 @@ namespace Extension.Wpf.UserControls.Logging
         }
 
         /// <summary>
+        /// A concurrent bag with log events
+        /// </summary>
+        private ConcurrentBag<LogEvent> LogEventsBag = new ConcurrentBag<LogEvent>();
+
+        /// <summary>
         /// The list of all log events for this control
         /// </summary>
         public ObservableCollection<LogEvent> LogEvents { get; set; } = new ObservableCollection<LogEvent>();
 
         public LogView()
         {
-            _synchronizationContext = SynchronizationContext.Current;
+            if (_synchronizationContext == default)
+            {
+                _synchronizationContext = SynchronizationContext.Current;
+            }
 
             InitializeComponent();
 
@@ -85,9 +94,15 @@ namespace Extension.Wpf.UserControls.Logging
                 var popup = new LoggingDetails(logEvent)
                 {
                     Owner = Application.Current.MainWindow,
-                    Background = Background,
-                    Foreground = Foreground,
                 };
+                if (Background != default)
+                {
+                    popup.Background = Background;
+                }
+                if (Foreground != default)
+                {
+                    popup.Foreground = Foreground;
+                }
                 popup.ShowDialog();
             }
         }

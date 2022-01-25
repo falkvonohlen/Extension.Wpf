@@ -25,11 +25,11 @@ namespace Wpf.Test
         private ILogger _logger;
         private Random _rnd = new Random();
 
-        public MainWindow(ILogger<MainWindow> logger)
+        public MainWindow(ILogger<MainWindow> logger, MainWindowViewModel vm)
         {
             _logger = logger;
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = vm;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

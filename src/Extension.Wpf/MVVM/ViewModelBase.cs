@@ -215,6 +215,29 @@ namespace Extension.Wpf.MVVM
         }
 
         /// <summary>
+        /// Run an async user action with exception handling
+        /// </summary>
+        /// <param name="func">The executed async func</param>
+        protected Task UserActionAsync(Func<Task> func)
+        {
+            return func.Invoke().ContinueWith(t =>
+            {
+                if (t.Status != TaskStatus.RanToCompletion && t.Exception != default)
+                {
+                    if (CatchExceptions)
+                    {
+                        var msg = $"Error during {func.Method.Name}";
+                        HandleException(t.Exception, msg);
+                    }
+                    else
+                    {
+                        throw t.Exception;
+                    }
+                }
+            });
+        }
+
+        /// <summary>
         /// Run an user action with exception handling
         /// </summary>
         /// <param name="action">The executed action</param>
@@ -224,6 +247,31 @@ namespace Extension.Wpf.MVVM
             return Task.Run(() =>
             {
                 UserAction(action, finalAction);
+            });
+        }
+
+        /// <summary>
+        /// Run an async user action with exception handling
+        /// </summary>
+        /// <param name="func">The executed async func</param>
+        /// <param name="finalAction">Runs always even if an exception has been catched</param>
+        protected Task UserActionAsync(Func<Task> func, Action finalAction)
+        {
+            return func.Invoke().ContinueWith(t =>
+            {
+                if (t.Status != TaskStatus.RanToCompletion && t.Exception != default)
+                {
+                    if (CatchExceptions)
+                    {
+                        var msg = $"Error during {func.Method.Name}";
+                        HandleException(t.Exception, msg);
+                    }
+                    else
+                    {
+                        throw t.Exception;
+                    }
+                }
+                finalAction.Invoke();
             });
         }
 
@@ -241,6 +289,38 @@ namespace Extension.Wpf.MVVM
         }
 
         /// <summary>
+        /// Run an async user action with exception handling
+        /// </summary>
+        /// <param name="func">The executed async func</param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
+        protected Task UserActionAsync(Func<Task> func,  bool loading)
+        {
+            if (loading)
+            {
+                SetLoading();
+            }
+            return func.Invoke().ContinueWith(t =>
+            {
+                if (t.Status != TaskStatus.RanToCompletion && t.Exception != default)
+                {
+                    if (CatchExceptions)
+                    {
+                        var msg = $"Error during {func.Method.Name}";
+                        HandleException(t.Exception, msg);
+                    }
+                    else
+                    {
+                        throw t.Exception;
+                    }
+                }
+                if (loading)
+                {
+                    ResetLoading();
+                }
+            });
+        }
+
+        /// <summary>
         /// Run an user action with exception handling
         /// </summary>
         /// <param name="action">The executed action</param>
@@ -251,6 +331,40 @@ namespace Extension.Wpf.MVVM
             return Task.Run(() =>
             {
                 UserAction(action, finalAction, loading);
+            });
+        }
+
+        /// <summary>
+        /// Run an async user action with exception handling
+        /// </summary>
+        /// <param name="func">The executed async func</param>
+        /// <param name="finalAction">Runs always even if an exception has been catched</param>
+        /// <param name="loading">If true, the application is set into a loading state while the action is executed</param>
+        protected Task UserActionAsync(Func<Task> func, Action finalAction, bool loading)
+        {
+            if (loading)
+            {
+                SetLoading();
+            }
+            return func.Invoke().ContinueWith(t =>
+            {
+                if (t.Status != TaskStatus.RanToCompletion && t.Exception != default)
+                {
+                    if (CatchExceptions)
+                    {
+                        var msg = $"Error during {func.Method.Name}";
+                        HandleException(t.Exception, msg);
+                    }
+                    else
+                    {
+                        throw t.Exception;
+                    }
+                }
+                finalAction.Invoke();
+                if (loading)
+                {
+                    ResetLoading();
+                }
             });
         }
 

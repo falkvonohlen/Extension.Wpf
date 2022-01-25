@@ -43,7 +43,8 @@ namespace Wpf.Test
                             MinLogLevel = LogLevel.Trace,
                         }));
                 })
-                .AddScoped<MainWindow>();
+                .AddScoped<MainWindow>()
+                .AddScoped<MainWindowViewModel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             serviceProvider.GetService<MainWindow>().Show();

@@ -1,8 +1,10 @@
 ﻿using Extension.Wpf.MVVM;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO.Packaging;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Wpf.Test
 {
@@ -52,6 +54,28 @@ namespace Wpf.Test
                     RaisePropertyChanged();
                 }
             }
+        }
+
+        public RelayCommand TestRelay { get; set; }
+
+        public MainWindowViewModel(ILogger<MainWindowViewModel> logger)
+        {
+            Logger = logger;
+            TestRelay = new RelayCommand(Test_Clicked);
+        }
+
+        private void Test_Clicked()
+        {
+            UserActionAsync(async () => 
+            {
+                Logger.LogInformation("Started test user action");
+                await Task.Delay(1500);
+            },
+            () => 
+            {
+                Logger.LogInformation("Completed user action");
+            },
+            true);
         }
     }
 }
