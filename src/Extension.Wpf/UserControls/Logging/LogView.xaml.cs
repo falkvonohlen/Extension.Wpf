@@ -28,7 +28,7 @@ namespace Extension.Wpf.UserControls.Logging
         /// </summary>
         public static readonly DependencyProperty IdProperty = DependencyProperty.Register(
             "Id", typeof(string), typeof(LogView),
-            new FrameworkPropertyMetadata(""));
+            new FrameworkPropertyMetadata("", new PropertyChangedCallback(IdChangedCallback)));
 
         /// <summary>
         /// The property used in this control
@@ -76,8 +76,6 @@ namespace Extension.Wpf.UserControls.Logging
 
             //The bindings need to be mapped on the code behind
             (this.Content as FrameworkElement).DataContext = this;
-
-            LogViewBroker.RegisterControl(this);
         }
 
         public void AddLogEvent(LogEvent log)
@@ -105,6 +103,30 @@ namespace Extension.Wpf.UserControls.Logging
                 }
                 popup.ShowDialog();
             }
+        }
+
+        /// <summary>
+        /// Called when the logger id of the log view and therefor the logging target changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void IdChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var c = (LogView)sender;
+            _synchronizationContext.Post(new SendOrPostCallback((o) =>
+            {
+                var oldValue = (string)e.OldValue;
+                var newValue = (string)e.NewValue;
+                if (string.IsNullOrEmpty(newValue) && !string.IsNullOrEmpty(oldValue))
+                {
+                    LogViewBroker.UnregisterControl(oldValue);
+                }
+                
+                if (!string.IsNullOrEmpty(newValue))
+                {
+                    LogViewBroker.RegisterControl(newValue, c);
+                }
+            }), null);
         }
     }
 }

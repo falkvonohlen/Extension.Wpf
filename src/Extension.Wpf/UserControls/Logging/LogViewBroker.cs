@@ -11,27 +11,55 @@ namespace Extension.Wpf.UserControls.Logging
     {
         private static SynchronizationContext _synchronizationContext;
 
-        private static ConcurrentBag<LogView> _openControls = new ConcurrentBag<LogView>();
+        private static ConcurrentDictionary<string, LogView> _openControls = new ConcurrentDictionary<string, LogView>();
 
-        public static void RegisterControl(LogView objectRef)
+        private static ConcurrentDictionary<string, ConcurrentQueue<LogEvent>> _buffer = new ConcurrentDictionary<string, ConcurrentQueue<LogEvent>>();
+
+        public static void RegisterControl(string id, LogView view)
         {
             if (_synchronizationContext == default)
             {
                 _synchronizationContext = SynchronizationContext.Current;
             }
-            _openControls.Add(objectRef);
+            _openControls.AddOrUpdate(id, view, (key, old) => view);
+            if (_buffer.TryGetValue(id, out var buffered))
+            {
+                while (buffered.TryDequeue(out var log))
+                {
+                    _synchronizationContext.Post(new SendOrPostCallback((o) => view.AddLogEvent(log)), null);
+                }
+            }
+        }
+
+        public static void UnregisterControl(string id)
+        {
+            if (_synchronizationContext == default)
+            {
+                _synchronizationContext = SynchronizationContext.Current;
+            }
+            _openControls.TryRemove(id, out var _);
         }
 
         public static void AddLogEvent(string target, LogEvent log)
         {
-            _synchronizationContext.Post(new SendOrPostCallback((o) =>
+            if (_openControls.TryGetValue(target, out var view))
             {
-                var control = _openControls.FirstOrDefault(c => c.Id == target);
-                if (control != default)
+                _synchronizationContext.Post(new SendOrPostCallback((o) => view.AddLogEvent(log)), null);
+            }
+            else
+            {
+                _buffer.AddOrUpdate(target, target =>
                 {
-                    control.AddLogEvent(log);
-                }
-            }), null);
+                    var queue = new ConcurrentQueue<LogEvent>();
+                    queue.Enqueue(log);
+                    return queue;
+                },
+                (target, old) =>
+                {
+                    old.Enqueue(log);
+                    return old;
+                });
+            }
         }
     }
 }

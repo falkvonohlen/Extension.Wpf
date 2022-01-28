@@ -47,6 +47,10 @@ namespace Wpf.Test
                 .AddScoped<MainWindowViewModel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<App>();
+            logger.LogInformation("Application started. Write buffered log message!");
+
             serviceProvider.GetService<MainWindow>().Show();
         }
     }

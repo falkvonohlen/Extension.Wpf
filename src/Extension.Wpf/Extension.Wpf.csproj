@@ -5,14 +5,14 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Authors>Falk von Ohlen</Authors>
-		<Version>1.4.0</Version>
+		<Version>1.4.1</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<Description>Enhances Wpf by a few user controls and MVVM support</Description>
 		<RepositoryType>C#</RepositoryType>
 		<RepositoryUrl>https://github.com/Jugalio/Extension.Wpf</RepositoryUrl>
-		<AssemblyVersion>1.4.0.0</AssemblyVersion>
-		<FileVersion>1.4.0.0</FileVersion>
-		<PackageReleaseNotes>Added new UserActions for async methods and fixed an issue with the logger.</PackageReleaseNotes>
+		<AssemblyVersion>1.4.1.0</AssemblyVersion>
+		<FileVersion>1.4.1.0</FileVersion>
+		<PackageReleaseNotes>Changed the logging broker to allow for buffered log messages before the view have been initialized.</PackageReleaseNotes>
 		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
