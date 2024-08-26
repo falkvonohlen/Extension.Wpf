@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.0; net472</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows; net472</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Authors>Falk von Ohlen</Authors>
-		<Version>1.4.1</Version>
+		<Version>1.4.2</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<Description>Enhances Wpf by a few user controls and MVVM support</Description>
 		<RepositoryType>C#</RepositoryType>

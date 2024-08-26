@@ -377,7 +377,7 @@ namespace Extension.Wpf.MVVM
             _loadingCounter++;
             if (_loadingCounter == 1)
             {
-                UICallbackAsync(() =>
+                UICallback(() =>
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
                     if (Application.Current?.MainWindow != null)
@@ -396,7 +396,7 @@ namespace Extension.Wpf.MVVM
             _loadingCounter--;
             if (_loadingCounter == 0)
             {
-                UICallbackAsync(() =>
+                UICallback(() =>
                 {
                     Mouse.OverrideCursor = null;
                     if (Application.Current?.MainWindow != null)
